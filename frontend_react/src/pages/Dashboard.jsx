@@ -101,19 +101,20 @@ export default function Dashboard() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: header => header.trim().toLowerCase(),
       complete: async (results) => {
         const parsedRows = results.data;
         // Transform rows to match our Pydantic Schema
         const bulkTransactions = parsedRows.map((row, index) => {
           return {
             transaction_id: `TXN_CSV_${Date.now()}_${index}`,
-            amount: parseFloat(row.Amount) || 0,
-            transaction_type: (row.Type || 'expense').toLowerCase(),
-            description: row.Description || 'Imported via CSV',
-            timestamp: row.Date ? new Date(row.Date).toISOString() : new Date().toISOString(),
+            amount: parseFloat(row.amount || row.value) || 0,
+            transaction_type: (row.type || row.transaction_type || 'expense').toLowerCase(),
+            description: row.description || row.reason || row.memo || row.title || 'Imported via CSV',
+            timestamp: row.date ? new Date(row.date).toISOString() : new Date().toISOString(),
             category: {
               category_id: Math.floor(Math.random() * 100),
-              name: row.Category || 'Misc',
+              name: row.category || row.group || 'Misc',
               description: 'Imported Category'
             },
             account: {

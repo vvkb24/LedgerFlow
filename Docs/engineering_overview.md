@@ -64,6 +64,7 @@ Instead of writing one massive HTML file, React lets us build reusable "Componen
 
 ### PapaParse & Client-Side Processing
 We implemented a Bulk CSV Upload feature. Instead of uploading a heavy file to the server and waiting for it to process, we use `PapaParse` to parse the file *locally* inside the user's browser. This leverages the user's CPU, making the parsing instantaneous, and we only send the final, cleaned data to the backend.
+To make the import robust against different bank CSV formats, our frontend parser actively cleans headers (lowercasing and trimming) and uses a fallback system to dynamically map columns (e.g., mapping `Reason`, `Memo`, or `Title` to the `description` field) preventing import crashes.
 
 ---
 

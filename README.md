@@ -44,7 +44,7 @@ We have built a sleek, minimalistic React frontend to interact with the API.
 2. Install dependencies: `npm install`
 3. Start the dev server: `npm run dev`
 4. Open your browser to **[http://localhost:5173](http://localhost:5173)**.
-5. You can register, log in, manage transactions, and even **Bulk Import CSV** files directly from the dashboard!
+5. You can register, log in, manage transactions, and even **Bulk Import CSV** files directly from the dashboard! The CSV importer features a robust parser that automatically cleans headers and intelligently maps columns regardless of capitalization or naming variations (e.g., `Reason`, `Memo`, `Title` are all mapped to `description`).
 
 ### Option 2: The Swagger API Docs
 FastAPI automatically generates interactive documentation for our API.

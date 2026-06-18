@@ -82,7 +82,7 @@ def save_transaction_to_db(db: Session, txn_data: Transaction) -> DBTransaction:
         db.add(account)
 
     # 3. Ensure the Category exists
-    category = db.query(DBCategory).filter(DBCategory.category_id == txn_data.category.category_id).first()
+    category = db.query(DBCategory).filter(DBCategory.name == txn_data.category.name).first()
     if not category:
         category = DBCategory(
             category_id=txn_data.category.category_id,
@@ -139,7 +139,7 @@ def save_bulk_transactions_to_db(db: Session, transactions: List[Transaction]) -
             )
             db.add(account)
 
-        category = db.query(DBCategory).filter(DBCategory.category_id == txn_data.category.category_id).first()
+        category = db.query(DBCategory).filter(DBCategory.name == txn_data.category.name).first()
         if not category:
             category = DBCategory(
                 category_id=txn_data.category.category_id,
@@ -203,7 +203,7 @@ def update_transaction_by_id(db: Session, transaction_id: str, new_data: Transac
     db_txn.timestamp = new_data.timestamp
     
     # 2. Check if the new category exists, if not, create it
-    category = db.query(DBCategory).filter(DBCategory.category_id == new_data.category.category_id).first()
+    category = db.query(DBCategory).filter(DBCategory.name == new_data.category.name).first()
     if not category:
         category = DBCategory(category_id=new_data.category.category_id, name=new_data.category.name)
         db.add(category)
