@@ -43,21 +43,30 @@ Separating the two prevents security vulnerabilities (like mass-assignment attac
 **Q8: Why did you use Docker and Docker Compose?**
 **Answer:** Docker solves the "it works on my machine" problem. By writing a `Dockerfile`, I packaged the Python runtime, dependencies, and application code into an immutable image. Docker Compose allowed me to define a multi-container environment where the FastAPI container and the PostgreSQL container run side-by-side on a private network. This ensures the app runs exactly the same way in local development, testing, and production environments.
 
+**Q9: How did you handle database migrations as the schema evolved?**
+**Answer:** I used Alembic, which acts as version control for the database schema. Instead of manually dropping tables or running raw SQL, I defined the database structure in Python using SQLAlchemy. When I needed to add a new column, I ran `alembic revision --autogenerate`. Alembic compares the Python models against the live database and generates a migration script containing `upgrade()` and `downgrade()` functions. This allowed me to safely push structural changes without destroying existing user data.
+
+**Q10: Can you explain how Docker works on Windows and why you used it?**
+**Answer:** I used Docker to containerize the application, ensuring it runs identically on any machine. Because Docker natively runs Linux containers, running it on Windows requires a virtualization layer. Docker Desktop uses WSL2 (Windows Subsystem for Linux), which provides a lightweight, highly integrated Linux kernel. This allowed my Windows machine to natively host the Linux containers for both the FastAPI backend and PostgreSQL database with near-bare-metal performance.
+
+**Q11: How did you integrate the React frontend with the FastAPI backend?**
+**Answer:** The React frontend acts as an independent client. It uses asynchronous HTTP requests (via `fetch` or Axios) to communicate with the FastAPI endpoints. I utilized React's `useState` to manage local UI data and `useEffect` to trigger the initial data fetch when the dashboard loads. When a user adds a transaction, React updates the local state and sends a JSON payload to the backend. To allow these cross-origin requests, I configured `CORSMiddleware` on the FastAPI server.
+
 ---
 
 ## Part 3: Extremely Critical / Advanced Questions
 
-**Q9 (Critical): JWTs are stateless. If a user's account is hacked, how do you instantly revoke their JWT before it expires?**
+**Q12 (Critical): JWTs are stateless. If a user's account is hacked, how do you instantly revoke their JWT before it expires?**
 **Answer:** Because JWTs are inherently stateless, the server doesn't check the database on every request to see if the token is valid; it only checks the cryptographic signature. To revoke a token instantly, we must introduce state. 
 *Solutions:* 
 1. **Token Blacklist/Blocklist:** Store revoked JWT signatures in a high-speed cache like Redis. The dependency injection "Bouncer" checks Redis on every request.
 2. **Refresh Token Rotation:** Keep the Access Token lifespan extremely short (e.g., 5 minutes) and issue a long-lived Refresh Token. If a user is compromised, revoke the Refresh Token in the database. The attacker will lose access in <= 5 minutes.
 3. **User Versioning:** Add a `token_version` integer to the database user row and include it in the JWT payload. If compromised, increment the integer in the database. Any token with an older version is instantly invalidated.
 
-**Q10 (Critical): In your `save_transaction_to_db` logic, you perform multiple inserts (User, Account, Category, Transaction). What happens if the database crashes exactly after creating the Account but before the Transaction is saved?**
+**Q13 (Critical): In your `save_transaction_to_db` logic, you perform multiple inserts (User, Account, Category, Transaction). What happens if the database crashes exactly after creating the Account but before the Transaction is saved?**
 **Answer:** This is a classic distributed data problem. To handle this, we rely on **ACID transactions** provided by PostgreSQL. Because I pass a single SQLAlchemy `Session` into the logic, all those `db.add()` operations occur within a single database transaction. The data is only staged. If the Python server crashes or a database error occurs before `db.commit()` is called, the database automatically performs a **Rollback**. The partially created Account and Category disappear, ensuring the database is never left in an inconsistent state. 
 
-**Q11 (Critical): How would you scale this application if it started receiving 10,000 requests per second?**
+**Q14 (Critical): How would you scale this application if it started receiving 10,000 requests per second?**
 **Answer:**
 1. **Application Scaling:** I would run multiple instances of the FastAPI container behind a Load Balancer (like NGINX or AWS ALB). Since JWT authentication is stateless, any container can handle any request.
 2. **Database Scaling:** PostgreSQL would become the bottleneck. I would implement Connection Pooling (using PgBouncer) so we don't exhaust the database's connection limit. 
