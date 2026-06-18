@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: expense_tracking_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: expensedb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: expense_tracking_api
+    ports:
+      - "8000:8000"
+    environment:
+      # Notice we use 'postgres_db' as the host, not 'localhost'!
+      # Docker Compose automatically maps service names to internal IP addresses.
+      # Also, internal port is 5432, not the mapped 5433 port!
+      - DATABASE_URL=postgresql+psycopg2://myuser:mypassword@postgres_db:5432/expensedb
+    depends_on:
+      - postgres_db
+
+volumes:
+  postgres_data:
