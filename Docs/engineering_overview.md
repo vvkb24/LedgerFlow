@@ -1,8 +1,8 @@
-# 🚀 The Ultimate Backend Engineering Masterclass
+# 🚀 Backend Engineering Overview
 
-Welcome! This document transitions you from learning simple syntax to grasping **Professional Backend Engineering**. We are going to deconstruct the `LedgerFlow` Expense Tracking application line-by-line, concept-by-concept. 
+Welcome! This document transitions you from learning simple syntax to grasping Backend Engineering. We are going to deconstruct the `LedgerFlow` Expense Tracking application line-by-line, concept-by-concept. 
 
-By the end of this, you won't just know *what* code to write; you will know *why* you are writing it, how the internet works under the hood, and how senior engineers architect scalable software in the real world.
+By the end of this, you won't just know *what* code to write; you will know *why* you are writing it, how the internet works under the hood, and how to architect scalable software.
 
 ---
 
@@ -111,7 +111,7 @@ class UserClass:
 ```
 **The Problem:** Dataclasses are great for organizing internal code, but they *still* don't do deep internet validation. If you pass `UserClass(id="string", ...)`, it often lets it slide or fails ungracefully.
 
-### Stage 4: Pydantic Model (Industry Standard / Production)
+### Stage 4: Pydantic Model
 Pydantic is a third-party library that forces strict, runtime mathematical validation.
 ```python
 from pydantic import BaseModel, EmailStr, field_validator
@@ -324,11 +324,11 @@ In professional environments, code cannot be merged into the `main` branch until
 
 ---
 
-## 📂 10. Professional Project Structure & Naming
+## 📂 10. Project Structure & Naming
 
-In the industry, files are named based on their *architectural responsibility*, not their features. We do not name files `user_stuff.py` or `expenses.py`. 
+Files are generally named based on their *architectural responsibility*, not their features. We do not name files `user_stuff.py` or `expenses.py`. 
 
-| File | Purpose | Professional Naming Convention |
+| File | Purpose | Naming Convention |
 |------|---------|--------------------------------|
 | `api.py` / `routers.py` | The HTTP Endpoints. Where internet requests land. | Nouns describing the entry point. |
 | `models.py` / `schemas.py` | Pydantic Models. The data validators and bouncers. | `schemas` or `models`. |
@@ -338,11 +338,11 @@ In the industry, files are named based on their *architectural responsibility*, 
 
 ---
 
-## ⚙️ 11. The Ultimate Functions Guide
+## ⚙️ 11. Functions Guide
 
-Here is a breakdown of key functions we built, and the senior-level lessons to learn from them.
+Here is a breakdown of key functions we built, and the engineering lessons to learn from them.
 
-| Function Name | What it does | The Senior Engineering Lesson |
+| Function Name | What it does | The Engineering Lesson |
 |--------------|--------------|---------------------------|
 | `save_bulk_transactions_to_db` | Loops through CSV data and saves it. | **Performance:** Notice we used `db.flush()` inside the loop, and `db.commit()` only ONCE at the very end. Committing to a database requires a heavy network round-trip. Committing 1,000 times takes 10 seconds. Flushing locally and committing once takes 0.1 seconds. |
 | `authenticate_user` | Checks email and password. | **Security:** Never compare raw passwords (`if pass == db_pass`). We use `bcrypt.checkpw()`, which compares cryptographic hashes securely to protect against timing attacks. |
@@ -353,4 +353,4 @@ Here is a breakdown of key functions we built, and the senior-level lessons to l
 2. **One Function, One Job (SRP):** The Single Responsibility Principle. If a function is validating data, saving to the DB, and sending an email, it's too big. Break it into three smaller functions.
 3. **Stay Curious:** The syntax will always change. New libraries will be invented. But the underlying concepts—State, HTTP Protocols, Databases, and Architecture—will remain the exact same for decades. Master the concepts, and you will be an unstoppable engineer. 
 
-You have built a production-grade, highly secure, full-stack application. Be extremely proud of this.
+You have built a full-stack application. Be proud of this.
