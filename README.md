@@ -55,6 +55,19 @@ FastAPI automatically generates interactive documentation for our API.
 
 ---
 
+## 🎓 The Backend Engineering Masterclass
+
+Are you using this project to learn backend engineering or prepare for an interview? I have written a **massive, comprehensive guide** breaking down every single concept in this application.
+
+Read the **[Ultimate Backend Engineering Masterclass](Docs/engineering_overview.md)** to learn about:
+- The evolution of data structures (Dictionaries -> TypedDicts -> Dataclasses -> Pydantic).
+- How the internet works and how FastAPI operates under the hood.
+- React.js from scratch.
+- The differences between Interpreted and Compiled languages.
+- Why we use Docker and PostgreSQL.
+
+---
+
 ## 📁 Project Structure
 
 To mirror professional engineering standards, the project is organized into distinct layers (Clean Architecture):
