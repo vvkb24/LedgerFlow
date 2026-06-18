@@ -1,6 +1,6 @@
-# Full-Stack Expense Tracking Backend
+# LedgerFlow
 
-Welcome to the **Expense Tracking Backend** project! This project has evolved from a simple Python script into a production-grade, secure REST API. It handles incoming JSON data, cryptographically authenticates users, permanently stores data in PostgreSQL, and serves it via a fast, modern API.
+Welcome to **LedgerFlow**! This project has evolved from a simple Python script into a production-grade, secure REST API. It handles incoming JSON data, cryptographically authenticates users, permanently stores data in PostgreSQL, and serves it via a fast, modern API.
 
 ## 🚀 How to Run the Project
 
